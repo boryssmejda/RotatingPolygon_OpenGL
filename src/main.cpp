@@ -1,21 +1,32 @@
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include "WindowHandler.hpp"
+#include "glfwHandlers/WindowHandler.hpp"
+#include "glfwHandlers/glfwWrapper.hpp"
+#include <iostream>
+
 
 int main()
 {
-    /* Initialize the library */
-    if (!glfwInit())
-        return -1;
+    glfwLibrary::GlfwWrapper glfwWrapper;
+    glfwLibrary::WindowHandler windowHandler(Width{ 800 }, Height{ 600 }, Title{ "Rotating Polygon" });
+    windowHandler.makeContextCurrent();
+    windowHandler.setSwapInterval();
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    
+    if (glewInit() != GLEW_OK)
+        std::cout << "Error creating GLEW\n";
 
-    #ifdef __APPLE__
-        std::cout << "We are on MacOS\n";
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    #endif
+    while (!windowHandler.shouldClose())
+    {
+        windowHandler.processInput();
+
+        /* Render here */
+        windowHandler.clearWindow();
+
+
+        windowHandler.swapBuffers();
+        /* Poll for and process events */
+        windowHandler.pollEvents();
+    }
+
 
     return 0;
 }
