@@ -6,6 +6,8 @@ project(RotatingPolygon)
         src/glfwHandlers/WindowHandler.cpp
         src/glfwHandlers/glfwWrapper.cpp
         
+        src/DebugHelper.cpp
+        
         src/main.cpp
     )
     
@@ -13,6 +15,8 @@ project(RotatingPolygon)
     
         src/glfwHandlers/WindowHandler.hpp
         src/glfwHandlers/glfwWrapper.hpp
+        
+        src/DebugHelper.hpp
     )
     
     add_executable(RotatingPolygon ${SOURCES} ${HEADERS})
@@ -22,8 +26,8 @@ project(RotatingPolygon)
     )
     
     if (MSVC)
-		set(GLEW_USE_STATIC_LIBS 1)
-	endif (MSVC)
+        set(GLEW_USE_STATIC_LIBS 1)
+    endif (MSVC)
     
     find_package(GLEW REQUIRED)
     find_package(glfw3 CONFIG REQUIRED)
@@ -35,5 +39,5 @@ project(RotatingPolygon)
         PRIVATE
         glfw
         OpenGL::GL
-		GLEW::GLEW
+        GLEW::GLEW
     )
