@@ -7,6 +7,8 @@ project(RotatingPolygon)
         src/glfwHandlers/glfwWrapper.cpp
         
         src/DebugHelper.cpp
+        src/Shader.cpp
+        src/VertexArray.cpp
         
         src/main.cpp
     )
@@ -17,9 +19,21 @@ project(RotatingPolygon)
         src/glfwHandlers/glfwWrapper.hpp
         
         src/DebugHelper.hpp
+        src/Shader.hpp
+        src/VertexArray.hpp
     )
     
-    add_executable(RotatingPolygon ${SOURCES} ${HEADERS})
+    set(EXTERNAL_LIBRARIES
+        libs/stb_image.h
+        libs/stb_image.c
+    )
+    
+    add_executable(RotatingPolygon ${SOURCES} ${HEADERS} ${EXTERNAL_LIBRARIES})
+    
+    target_include_directories(RotatingPolygon PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/libs/>
+    )
+    
     set_target_properties(RotatingPolygon PROPERTIES
         CXX_STANDARD 17
         CXX_STANDARD_REQUIRED YES

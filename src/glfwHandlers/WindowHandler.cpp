@@ -11,18 +11,17 @@ void glfwLibrary::WindowHandler::frameBufferSizeCallback(GLFWwindow* t_window, i
 	glViewport(0, 0, t_width, t_height);
 }
 
-glfwLibrary::WindowHandler::WindowHandler(Width t_width, Height t_height, Title t_windowTitle) :
-	m_WINDOW_TITLE{ t_windowTitle.get() }
+glfwLibrary::WindowHandler::WindowHandler(int t_width, int t_height, std::string t_windowTitle)
 {
-	m_windowHandle = glfwCreateWindow(t_width.get(), t_height.get(), m_WINDOW_TITLE.c_str(), nullptr, nullptr);
+	m_windowHandle = glfwCreateWindow(t_width, t_height, t_windowTitle.c_str(), nullptr, nullptr);
 	if (!m_windowHandle)
 		throw std::runtime_error("Could not create window");
 	
 	glfwSetFramebufferSizeCallback(m_windowHandle, glfwLibrary::WindowHandler::frameBufferSizeCallback);
 
 	std::cout << "Window created successfully!\n" <<
-		"Width: " << t_width.get() << '\n' <<
-		"Height: " << t_height.get() << "\n\n";
+		"Width: " << t_width << '\n' <<
+		"Height: " << t_height << "\n\n";
 }
 
 glfwLibrary::WindowHandler::~WindowHandler()
@@ -43,6 +42,16 @@ int glfwLibrary::WindowHandler::getHeight() const
 	int height;
 	glfwGetWindowSize(m_windowHandle, nullptr, &height);
 	return height;
+}
+
+void glfwLibrary::WindowHandler::makeContextCurrent() const
+{
+	glfwMakeContextCurrent(m_windowHandle);
+	if (glewInit() != GLEW_OK)
+	{
+		throw std::runtime_error("Could not initialize GLEW!\n");
+	}
+	std::cout << glGetString(GL_VERSION) << '\n';
 }
 
 void glfwLibrary::WindowHandler::clearWindow() const

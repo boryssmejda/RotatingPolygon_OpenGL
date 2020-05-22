@@ -1,18 +1,23 @@
 #include "glfwHandlers/WindowHandler.hpp"
 #include "glfwHandlers/glfwWrapper.hpp"
-#include <iostream>
+#include "DebugHelper.hpp"
 
+#include "glm/common.hpp"
+#include "Shader.hpp"
 
 int main()
 {
     glfwLibrary::GlfwWrapper glfwWrapper;
-    glfwLibrary::WindowHandler windowHandler(Width{ 800 }, Height{ 600 }, Title{ "Rotating Polygon" });
+    glfwLibrary::WindowHandler windowHandler(800, 600, "Rotating Polygon");
     windowHandler.makeContextCurrent();
     windowHandler.setSwapInterval();
 
+    DebugHelper::enableOpenGLDebugContext();
     
-    if (glewInit() != GLEW_OK)
-        std::cout << "Error creating GLEW\n";
+    std::string vertexPath = "../resources/shaders/trianglePos.vert";
+    std::string fragPath = "../resources/shaders/triangleColor.frag";
+
+    Shader shader(vertexPath, fragPath);
 
     while (!windowHandler.shouldClose())
     {
@@ -20,6 +25,7 @@ int main()
 
         /* Render here */
         windowHandler.clearWindow();
+        shader.use();
 
 
         windowHandler.swapBuffers();
