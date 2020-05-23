@@ -3,6 +3,9 @@
 
 #include "GL/glew.h"
 
+class VertexBuffer;
+class VertexBufferLayout;
+
 class VertexArray
 {
 private:
@@ -15,8 +18,9 @@ public:
 	VertexArray(const VertexArray& t_vertexArray) = delete;
 	VertexArray& operator = (const VertexArray& t_vertexArray) = delete;
 
-	void bind() const;
-	void unbind() const;
+	void bind() const noexcept;
+	void unbind() const noexcept;
+	void addBuffer(const VertexBuffer& t_vb, const VertexBufferLayout& t_layout) const;
 };
 
 #endif // !_VERTEX_ARRAY_HPP

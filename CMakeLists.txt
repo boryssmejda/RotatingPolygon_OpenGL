@@ -8,7 +8,14 @@ project(RotatingPolygon)
         
         src/DebugHelper.cpp
         src/Shader.cpp
-        src/VertexArray.cpp
+        
+        src/Vertices/VertexArray.cpp
+        src/Vertices/VertexBuffer/VertexBuffer.cpp
+        
+        src/Vertices/VertexBuffer/VertexBufferLayout.cpp
+        
+        src/IndexBuffer.cpp
+        src/Renderer.cpp
         
         src/main.cpp
     )
@@ -20,7 +27,14 @@ project(RotatingPolygon)
         
         src/DebugHelper.hpp
         src/Shader.hpp
-        src/VertexArray.hpp
+        
+        src/Vertices/VertexArray.hpp
+        src/Vertices/VertexBuffer/VertexBuffer.hpp
+        
+        src/Vertices/VertexBuffer/VertexBufferLayout.hpp
+        
+        src/IndexBuffer.hpp
+        src/Renderer.hpp
     )
     
     set(EXTERNAL_LIBRARIES

@@ -99,7 +99,12 @@ Shader::~Shader()
 	glDeleteProgram(m_ID);
 }
 
-void Shader::use()
+void Shader::use() const noexcept
 {
 	glUseProgram(m_ID);
+}
+
+void Shader::setColor(const std::string& t_uniformName, const Color& t_color) const noexcept
+{
+	glUniform4f(glGetUniformLocation(m_ID, t_uniformName.c_str()), t_color.r, t_color.g, t_color.b, t_color.alpha);
 }

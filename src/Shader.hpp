@@ -4,6 +4,11 @@
 #include <string>
 #include "GL/glew.h"
 
+struct Color
+{
+	float r, g, b, alpha = 1.0f;
+};
+
 class Shader
 {
 private:
@@ -14,8 +19,9 @@ public:
 	~Shader();
 	Shader(const Shader& t_shader) = delete;
 	Shader& operator = (const Shader& t_shader) = delete;
-	void use();
+	void use() const noexcept;
 
+	void setColor(const std::string& t_uniformName, const Color& t_color) const noexcept;
 };
 
 #endif // !SHADER_HPP
