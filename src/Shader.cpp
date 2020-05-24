@@ -104,7 +104,19 @@ void Shader::use() const noexcept
 	glUseProgram(m_ID);
 }
 
+int Shader::getUniformLocation(const std::string& t_uniformName) const noexcept
+{
+	return glGetUniformLocation(m_ID, t_uniformName.c_str());
+}
+
 void Shader::setColor(const std::string& t_uniformName, const Color& t_color) const noexcept
 {
-	glUniform4f(glGetUniformLocation(m_ID, t_uniformName.c_str()), t_color.r, t_color.g, t_color.b, t_color.alpha);
+	this->use();
+	glUniform4f(getUniformLocation(t_uniformName), t_color.r, t_color.g, t_color.b, t_color.alpha);
+}
+
+void Shader::setMat4f(const std::string& t_uniformName, const glm::mat4 t_transformation) const noexcept
+{
+	this->use();
+	glUniformMatrix4fv(getUniformLocation(t_uniformName), 1, GL_FALSE, &t_transformation[0][0]);
 }

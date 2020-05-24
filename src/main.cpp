@@ -10,6 +10,13 @@
 
 #include "IndexBuffer.hpp"
 #include "Renderer.hpp"
+#include "Texture.hpp"
+#include "stb_image.h"
+#include <iostream>
+
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
 
 enum Shape
 {
@@ -20,7 +27,7 @@ enum Shape
 int main()
 {
     glfwLibrary::GlfwWrapper glfwWrapper;
-    glfwLibrary::WindowHandler windowHandler(800, 600, "Rotating Polygon");
+    glfwLibrary::WindowHandler windowHandler(1200, 800, "Rotating Polygon");
     windowHandler.makeContextCurrent();
     windowHandler.setSwapInterval();
 
@@ -31,44 +38,48 @@ int main()
 
     Shader shader(vertexPath, fragPath);
 
-    /*=================== RENDER TRIANGLE ======================================*/
+    /*===================  TRIANGLE ======================================*/
     float triangle[] = {
-        -0.5f, 0.0f,
-         0.0f, 0.5f,
-         0.5f, 0.0f
+        -0.5f, 0.0f,    0.0f, 0.0f,
+         0.0f, 0.6f,    0.5f, 1.0f,
+         0.5f, 0.0f,    1.0f, 0.0f
     };
-  
-    VertexArray va[2];
-    va[TRIANGLE].bind();
+    
+    VertexArray triangle_va;
+    triangle_va.bind();
     VertexBuffer vb_triangle(GL_ARRAY_BUFFER, triangle, sizeof(triangle), GL_STATIC_DRAW);
     VertexBufferLayout vertBufTriangularLayout;
     vertBufTriangularLayout.push(2, GL_FLOAT, GL_FALSE);
-    va[TRIANGLE].addBuffer(vb_triangle, vertBufTriangularLayout);
+    vertBufTriangularLayout.push(2, GL_FLOAT, GL_FALSE);
+    
+    triangle_va.addBuffer(vb_triangle, vertBufTriangularLayout);
+    Texture iluminatiLogo("../resources/textures/iluminatiLogo.png", Texture::FILE_TYPE::PNG);
 
-    //======= RECTANGLE ====================
-
-
-    float rectangle[] = {
-        -0.5f, -0.25f, 
-        -0.5f, -0.75f, 
-         0.5f, -0.25f, 
-         0.5f, -0.75f
+    //======================= RECTANGLE ====================
+    float vertices[] = {
+        // positions        // texture coords
+         0.25f,  0.0f,     1.0f, 1.0f, // top right
+         0.25f,  -0.3f,     1.0f, 0.0f, // bottom right
+        -0.25f,  -0.3f,     0.0f, 0.0f, // bottom left
+        -0.25f,  0.0f,     0.0f, 1.0f  // top left 
     };
 
     unsigned int rectangleIndices[] = {
-        0, 1, 2,
+        0, 1, 3,
         1, 2, 3
     };
 
-    va[RECTANGLE].bind();
-    VertexBuffer vb_rectangle(GL_ARRAY_BUFFER, rectangle, sizeof(rectangle), GL_STATIC_DRAW);
+    VertexArray va_rectangle;
+    va_rectangle.bind();
+    VertexBuffer vb_rectangle(GL_ARRAY_BUFFER, vertices, sizeof(vertices), GL_STATIC_DRAW);
     VertexBufferLayout vertBufLayout;
     vertBufLayout.push(2, GL_FLOAT, GL_FALSE);
-
-    va[RECTANGLE].addBuffer(vb_rectangle, vertBufLayout);
+    vertBufLayout.push(2, GL_FLOAT, GL_FALSE);
+    
+    va_rectangle.addBuffer(vb_rectangle, vertBufLayout);
     IndexBuffer indexBuf(rectangleIndices, sizeof(rectangleIndices) / sizeof(unsigned int), GL_STATIC_DRAW);
+    Texture containerTexture("../resources/textures/oneDollar.jpg", Texture::FILE_TYPE::JPG);
     /*==========================================================================*/
-
 
     while (!windowHandler.shouldClose())
     {
@@ -76,14 +87,23 @@ int main()
 
         /* Render here */
         Renderer::clearScreen();
-        va[TRIANGLE].bind();
-        shader.use();
-        shader.setColor("u_color", { 1.0f, 0.0f, 1.0f, 1.0f });
-        Renderer::drawArray(va[0], shader, 3);
+   
+        containerTexture.bind(0);
 
-        va[RECTANGLE].bind();
-        shader.setColor("u_color", { 0.0f, 0.0f, 1.0f, 1.0f });
-        Renderer::drawElements(va[1], shader, indexBuf);
+        glm::mat4 transRectangle = glm::mat4(1.0f);
+        transRectangle = glm::translate(transRectangle, glm::vec3(0.7f, -0.5f, 0.0f));
+
+        shader.setMat4f("transform", transRectangle);
+        Renderer::drawElements(va_rectangle, shader, indexBuf);
+
+        iluminatiLogo.bind(0);
+        glm::mat4 transTriangle = glm::mat4(1.0f);
+        transTriangle = glm::translate(transTriangle, glm::vec3(0.0f, 0.15f, 0.0f));
+        transTriangle = glm::rotate(transTriangle, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        transTriangle = glm::translate(transTriangle, glm::vec3(0.0f, -0.15f, 0.0f));
+        transTriangle = glm::scale(transTriangle, glm::vec3(0.5f, 0.5f, 0.5f));
+        shader.setMat4f("transform", transTriangle);
+        Renderer::drawArray(triangle_va, shader, 3);
 
         windowHandler.swapBuffers();
         /* Poll for and process events */

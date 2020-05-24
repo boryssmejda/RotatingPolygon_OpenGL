@@ -34,7 +34,7 @@ void VertexArray::addBuffer(const VertexBuffer& t_vb, const VertexBufferLayout& 
 	{
 		const auto& curEl = elements[i];
 		glEnableVertexAttribArray(i);
-		glVertexAttribPointer(i, curEl.m_size, curEl.m_type, curEl.m_normalized, t_layout.getStride(), (const void*)(offset));
+		glVertexAttribPointer(i, curEl.m_size, curEl.m_type, curEl.m_normalized, t_layout.getStride(), (const void*)offset);
 
 		offset += curEl.m_size * static_cast<uint64_t>(VertexBufferElement::getSizeOfType(curEl.m_type));
 	}

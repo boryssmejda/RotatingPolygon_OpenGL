@@ -13,9 +13,10 @@ project(RotatingPolygon)
         src/Vertices/VertexBuffer/VertexBuffer.cpp
         
         src/Vertices/VertexBuffer/VertexBufferLayout.cpp
-        
         src/IndexBuffer.cpp
+        
         src/Renderer.cpp
+        src/Texture.cpp
         
         src/main.cpp
     )
@@ -32,9 +33,10 @@ project(RotatingPolygon)
         src/Vertices/VertexBuffer/VertexBuffer.hpp
         
         src/Vertices/VertexBuffer/VertexBufferLayout.hpp
-        
         src/IndexBuffer.hpp
+        
         src/Renderer.hpp
+        src/Texture.hpp
     )
     
     set(EXTERNAL_LIBRARIES

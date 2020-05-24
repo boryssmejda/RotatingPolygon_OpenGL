@@ -3,6 +3,7 @@
 
 #include <string>
 #include "GL/glew.h"
+#include "glm/glm.hpp"
 
 struct Color
 {
@@ -21,7 +22,10 @@ public:
 	Shader& operator = (const Shader& t_shader) = delete;
 	void use() const noexcept;
 
+	int getUniformLocation(const std::string& t_uniformName) const noexcept;
 	void setColor(const std::string& t_uniformName, const Color& t_color) const noexcept;
+	void setMat4f(const std::string& t_uniformName, const glm::mat4 t_transformation) const noexcept;
+	
 };
 
 #endif // !SHADER_HPP
